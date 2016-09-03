@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+#
+# Simple script to give me the equivalent of a shadowed password.
+# It uses a salt generated from /dev/urandom, base64 encoded.
+
+import crypt
+import getpass
+import os
+
+salt = os.urandom(9).encode('base_64')[:-1]
+pw = getpass.getpass("Suitable password: ")
+
+
+print crypt.crypt(pw, "$6$%s$" % salt)

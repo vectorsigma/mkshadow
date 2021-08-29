@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Simple script to give me the equivalent of a shadowed password.
 # It uses a salt generated from /dev/urandom, base64 encoded.
@@ -6,9 +6,17 @@
 import crypt
 import getpass
 import os
+import base64
 
-salt = os.urandom(9).encode('base_64')[:-1]
+salt_bytes = base64.b64encode(os.urandom(9))
+
+# python keeps the leading b' and trailing ' after you type coerce bytes to string.
+# trim that out so you get the pure string.
+# FIXME: this is probably not the right way to do this.
+salt = str(salt_bytes)[2:-1]
+
+# prevent password from being echoed on the terminal
+# FIXME: Might be a good idea to ask twice.
 pw = getpass.getpass("Suitable password: ")
 
-
-print crypt.crypt(pw, "$6$%s$" % salt)
+print(crypt.crypt(pw, "$6$%s$" % salt))
